@@ -1,0 +1,70 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information including role",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["policyholder", "assessor"] },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "UserDocument": {
+      "title": "UserDocument",
+      "description": "Essential documents for insurance",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "type": { "type": "string", "enum": ["insurance", "license", "rc"] },
+        "url": { "type": "string" },
+        "expiryDate": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["valid", "expired"] }
+      },
+      "required": ["userId", "type", "url", "expiryDate"]
+    },
+    "Claim": {
+      "title": "Claim",
+      "description": "Insurance claim submission",
+      "type": "object",
+      "properties": {
+        "policyholderId": { "type": "string" },
+        "description": { "type": "string" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "firUrl": { "type": "string" },
+        "aiAnalysis": {
+          "type": "object",
+          "properties": {
+            "bertConsistency": { "type": "string" },
+            "cnnDamageDetection": { "type": "string" },
+            "fraudScore": { "type": "number" }
+          }
+        },
+        "predictedAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "assessorId": { "type": "string" },
+        "feedback": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["policyholderId", "description", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/users/{userId}/documents/{docId}": {
+      "schema": "UserDocument",
+      "description": "User insurance documents"
+    },
+    "/claims/{claimId}": {
+      "schema": "Claim",
+      "description": "Insurance claims"
+    }
+  }
+}
